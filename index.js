@@ -13,6 +13,9 @@ app.use(bodyPs.json());
 const mhsRouter = require('./routes/mahasiswa.js');
 app.use('/api/mhs', mhsRouter);
 
+const jrsRouter = require('./routes/jurusan.js');
+app.use('/api/jrs', jrsRouter);
+
 app.listen(port, () => {
     console.log(`aplikasi berjalan di http:://localhost:${port}`)
 })
