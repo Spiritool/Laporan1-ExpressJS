@@ -105,7 +105,7 @@ router.patch('/update/:id', [
 
 router.delete('/delete/(:id)', function(req, res){
     let id = req.params.id;
-    connection.query(`delete from jurusan where id_j   = ${id}`, function (err, rows) {
+    connection.query(`delete from jurusan where id_j = ${id}`, function (err, rows) {
         if(err){
             return res.status(500).json({
                 status: false,
