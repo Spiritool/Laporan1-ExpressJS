@@ -1,6 +1,14 @@
 const express = require('express')
+const bodyPrs = require("body-parser")
 const app = express()
 const port = 3000
+const cors = require("cors")
+
+app.use(cors())
+
+const path = require("path")
+app.use("/static", express.static(path.join(__dirname, 'public/images')))
+
 
 // app.get('/', (req, res) => {
 //     res.send('Halo decks')
