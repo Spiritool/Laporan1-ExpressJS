@@ -24,6 +24,9 @@ app.use('/api/mhs', mhsRouter);
 const jrsRouter = require('./routes/jurusan.js');
 app.use('/api/jrs', jrsRouter);
 
+const auth = require('./routes/auth/auth');
+app.use('/api/auth', auth);
+
 app.listen(port, () => {
     console.log(`aplikasi berjalan di http:://localhost:${port}`)
 })

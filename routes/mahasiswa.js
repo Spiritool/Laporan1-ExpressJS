@@ -6,6 +6,9 @@ const path = require('path')
 const connection = require('../config/db');
 const fs = require('fs')
 
+const authenticateToken = require('../routes/auth/midleware/authenticateToken')
+
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'public/images')
@@ -26,7 +29,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({storage: storage, fileFilter: fileFilter})
 
-router.get('/', function (req, res) {
+router.get('/', authenticateToken, function (req, res) {
     connection.query('SELECT a.id_m, a.nama, a.nrp, b.nama_jurusan as jurusan, a.gambar, a.swa_foto from mahasiswa a join jurusan b ' 
     + ' on b.id_j=a.id_jurusan order by a.id_m desc', function(err, rows){
         if(err){
@@ -45,7 +48,7 @@ router.get('/', function (req, res) {
     });
 });
 
-router.post('/store', upload.fields([{ name: 'gambar', maxCount: 1}, { name: 'swa_foto', maxCount: 1}]) , [
+router.post('/store', authenticateToken, upload.fields([{ name: 'gambar', maxCount: 1}, { name: 'swa_foto', maxCount: 1}]) , [
     body('nama').notEmpty(),
     body('nrp').notEmpty(),
     body('id_jurusan').notEmpty(),
@@ -79,7 +82,7 @@ router.post('/store', upload.fields([{ name: 'gambar', maxCount: 1}, { name: 'sw
     })
 })
 
-router.get('/(:id)', function (req, res) {
+router.get('/(:id)', authenticateToken, function (req, res) {
     let id = req.params.id;
     connection.query(`select * from mahasiswa where id_m = ${id}`, function (err, rows) {
         if(err){
@@ -104,7 +107,7 @@ router.get('/(:id)', function (req, res) {
     })
 })
 
-router.patch('/update/:id', upload.fields([{ name: 'gambar', maxCount: 1 }, { name: 'swa_foto', maxCount: 1 }]) ,[
+router.patch('/update/:id', authenticateToken, upload.fields([{ name: 'gambar', maxCount: 1 }, { name: 'swa_foto', maxCount: 1 }]) ,[
     body('nama').notEmpty(),
     body('nrp').notEmpty(),
     body('id_jurusan').notEmpty(),
@@ -174,7 +177,7 @@ router.patch('/update/:id', upload.fields([{ name: 'gambar', maxCount: 1 }, { na
 })  
 })
 
-router.delete('/delete/(:id)', function(req, res){
+router.delete('/delete/(:id)', authenticateToken,  function(req, res){
     let id = req.params.id;
 
     connection.query(`select * from mahasiswa where id_m = ${id}`, function (err, rows) {
@@ -218,4 +221,4 @@ router.delete('/delete/(:id)', function(req, res){
 })
 })
 
-module.exports = router; // Corrected export statement
+module.exports = router; 
